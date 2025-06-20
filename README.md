@@ -20,13 +20,13 @@ I hope you now know about the data I am using for the online payment fraud detec
 Online Payments Fraud Detection using Python
 I will start this task by importing the necessary Python libraries and the dataset we need for this task:
 
-1
+
 import pandas as pd
-2
+
 import numpy as np
-3
+
 data = pd.read_csv("credit card.csv")
-4
+
 print(data.head())
    step      type    amount     nameOrig  oldbalanceOrg  newbalanceOrig  \
 0     1   PAYMENT   9839.64  C1231006815       170136.0       160296.36   
@@ -44,7 +44,7 @@ print(data.head())
 Now, let’s have a look at whether this dataset has any null values or not:
 
 
-1
+
 print(data.isnull().sum())
 step              0
 type              0
@@ -60,9 +60,9 @@ isFlaggedFraud    0
 dtype: int64
 So this dataset does not have any null values. Before moving forward, now, let’s have a look at the type of transaction mentioned in the dataset:
 
-1
+
 # Exploring transaction type
-2
+
 print(data.type.value_counts())
 CASH_OUT    2237500
 PAYMENT     2151495
@@ -70,34 +70,34 @@ CASH_IN     1399284
 TRANSFER     532909
 DEBIT         41432
 Name: type, dtype: int64
-1
+
 type = data["type"].value_counts()
-2
+
 transactions = type.index
-3
+
 quantity = type.values
-4
+
 ​
-5
+
 import plotly.express as px
-6
+
 figure = px.pie(data, 
-7
+
              values=quantity, 
-8
+
              names=transactions,hole = 0.5, 
-9
+
              title="Distribution of Transaction Type")
-10
+
 figure.show()
 Online Payments Fraud Detection
 Now let’s have a look at the correlation between the features of the data with the isFraud column:
 
-1
+
 # Checking correlation
-2
+
 correlation = data.corr()
-3
+
 print(correlation["isFraud"].sort_values(ascending=False))
 isFraud           1.000000
 amount            0.076688
@@ -110,15 +110,15 @@ newbalanceOrig   -0.008148
 Name: isFraud, dtype: float64
 Now let’s transform the categorical features into numerical. Here I will also transform the values of the isFraud column into No Fraud and Fraud labels to have a better understanding of the output:
 
-1
+
 data["type"] = data["type"].map({"CASH_OUT": 1, "PAYMENT": 2, 
-2
+
                                  "CASH_IN": 3, "TRANSFER": 4,
-3
+
                                  "DEBIT": 5})
-4
+
 data["isFraud"] = data["isFraud"].map({0: "No Fraud", 1: "Fraud"})
-5
+
 print(data.head())
    step  type    amount     nameOrig  oldbalanceOrg  newbalanceOrig  \
 0     1     2   9839.64  C1231006815       170136.0       160296.36   
@@ -137,38 +137,38 @@ Online Payments Fraud Detection Model
 Now let’s train a classification model to classify fraud and non-fraud transactions. Before training the model, I will split the data into training and test sets:
 
 
-1
+
 # splitting the data
-2
+
 from sklearn.model_selection import train_test_split
-3
+
 x = np.array(data[["type", "amount", "oldbalanceOrg", "newbalanceOrig"]])
-4
+
 y = np.array(data[["isFraud"]])
 Now let’s train the online payments fraud detection model:
 
-1
+
 # training a machine learning model
-2
+
 from sklearn.tree import DecisionTreeClassifier
-3
+
 xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.10, random_state=42)
-4
+
 model = DecisionTreeClassifier()
-5
+
 model.fit(xtrain, ytrain)
-6
+
 print(model.score(xtest, ytest))
 0.9997391011878755
 Now let’s classify whether a transaction is a fraud or not by feeding about a transaction into the model:
 
-1
+
 # prediction
-2
+
 #features = [type, amount, oldbalanceOrg, newbalanceOrig]
-3
+
 features = np.array([[4, 9000.60, 9000.60, 0.0]])
-4
+
 print(model.predict(features))
 ['Fraud']
 Summary
