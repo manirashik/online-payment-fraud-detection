@@ -73,6 +73,7 @@ figure.show()
 ```
 <br />
 
+![visualise](https://github.com/user-attachments/assets/342d97d0-d6b3-4d08-abee-993cf87f5855)
 
 ## Model Training
 The model training is performed within the `main.ipynb` script, which processes the text data and trains a Sequential model using sklearn. You can modify the model architecture, training parameters, or the data processing steps within this script.
@@ -131,7 +132,6 @@ Contributions are welcome! If you'd like to contribute to this project, please f
 3. [Kaggle](https://www.kaggle.com/datasets)
 4. [NumPy](https://numpy.org/)
 5. [Plotly](https://plotly.com/)
-
 
 
 **Happy Coding!** <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Fire.png" alt="Fire" width="30" align=center /><img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Star.png" alt="Star" width="30" align=center />
