@@ -1,176 +1,151 @@
-# online-payment-fraud-detection
-The introduction of online payment systems has helped a lot in the ease of payments. But, at the same time, it increased in payment frauds. Online payment frauds can happen with anyone using any payment system, especially while making payments using a credit card. That is why detecting online payment fraud is very important for credit card companies to ensure that the customers are not getting charged for the products and services they never paid. If you want to learn how to detect online payment frauds, this article is for you. In this article, I will take you through the task of online payments fraud detection with machine learning using Python.
+# Online Payment Fraud Detection
 
+## Project Overview
+**Online Payment Fraud Detection** is a data science project aimed at identifying fraudulent transactions in online payment systems. The project leverages machine learning techniques to analyze transaction data and distinguish between legitimate and fraudulent activities. By building and evaluating predictive models, the project aims to enhance security measures and reduce financial losses due to fraud.
 
-Online Payments Fraud Detection with Machine Learning
-To identify online payment fraud with machine learning, we need to train a machine learning model for classifying fraudulent and non-fraudulent payments. For this, we need a dataset containing information about online payment fraud, so that we can understand what type of transactions lead to fraud. For this task, I collected a dataset from Kaggle, which contains historical information about fraudulent transactions which can be used to detect fraud in online payments. Below are all the columns from the dataset I’m using here:
+## Introduction
+With the rise of e-commerce and digital transactions, online payment fraud has become a significant threat. This project focuses on building robust machine learning models to detect fraudulent transactions effectively. The models are trained on historical transaction data and are designed to generalize well to unseen data, ensuring reliable fraud detection in real-world scenarios.
 
-step: represents a unit of time where 1 step equals 1 hour
-type: type of online transaction
-amount: the amount of the transaction
-nameOrig: customer starting the transaction
-oldbalanceOrg: balance before the transaction
-newbalanceOrig: balance after the transaction
-nameDest: recipient of the transaction
-oldbalanceDest: initial balance of recipient before the transaction
-newbalanceDest: the new balance of recipient after the transaction
-isFraud: fraud transaction
-I hope you now know about the data I am using for the online payment fraud detection task. Now in the section below, I’ll explain how we can use machine learning to detect online payment fraud using Python.
+## Dataset
+The dataset used for this project contains records of online transactions, each labeled as fraudulent or legitimate. It includes features such as transaction amount, payment method, location, and time of transaction. The dataset is cleaned, preprocessed, and split into training and testing sets to develop and evaluate the models.
 
-Online Payments Fraud Detection using Python
-I will start this task by importing the necessary Python libraries and the dataset we need for this task:
+- **Dataset link**: [Kaggle link](https://www.kaggle.com/datasets/jainilcoder/online-payment-fraud-detection)
 
+An example of the data structure:
+```csv
+1,PAYMENT,9839.64,C1231006815,170136.0,160296.36,M1979787155,0.0,0.0,0,0
+1,PAYMENT,1864.28,C1666544295,21249.0,19384.72,M2044282225,0.0,0.0,0,0
+```
 
-import pandas as pd
+The data file `onlinefraud.csv` should be placed in the root directory of the project.
 
-import numpy as np
+## Installation
 
-data = pd.read_csv("credit card.csv")
+To run this project locally, you'll need to have Python installed. Follow these steps to set up the environment:
 
-print(data.head())
-   step      type    amount     nameOrig  oldbalanceOrg  newbalanceOrig  \
-0     1   PAYMENT   9839.64  C1231006815       170136.0       160296.36   
-1     1   PAYMENT   1864.28  C1666544295        21249.0        19384.72   
-2     1  TRANSFER    181.00  C1305486145          181.0            0.00   
-3     1  CASH_OUT    181.00   C840083671          181.0            0.00   
-4     1   PAYMENT  11668.14  C2048537720        41554.0        29885.86   
+1. **Clone the Repository:**
+```bash
+git clone https://github.com/Vaibhav-kesarwani/Online_Payment_Fraud_Detection.git
+cd Online_Payment_Fraud_Detection
+```
 
-      nameDest  oldbalanceDest  newbalanceDest  isFraud  isFlaggedFraud  
-0  M1979787155             0.0             0.0        0               0  
-1  M2044282225             0.0             0.0        0               0  
-2   C553264065             0.0             0.0        1               0  
-3    C38997010         21182.0             0.0        1               0  
-4  M1230701703             0.0             0.0        0               0  
-Now, let’s have a look at whether this dataset has any null values or not:
+2. **Create a Virtual Environment (optional but recommended):**
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+```
 
+3. **Install Required Packages:** Install the dependencies by running
+```bash
+pip install -r requirements.txt
+```
 
+## Usage
 
-print(data.isnull().sum())
-step              0
-type              0
-amount            0
-nameOrig          0
-oldbalanceOrg     0
-newbalanceOrig    0
-nameDest          0
-oldbalanceDest    0
-newbalanceDest    0
-isFraud           0
-isFlaggedFraud    0
-dtype: int64
-So this dataset does not have any null values. Before moving forward, now, let’s have a look at the type of transaction mentioned in the dataset:
+### Running the Project
+To run the Text Emotion Classifier, follow these steps:
+1. **Prepare the Dataset:** Ensure that your `onlinefraud.csv` file is in the root directory. This file should contain the text data and corresponding labels, separated by a comma `(,)`.
+2. **Run the Script:** Execute the main script to load the data and perform emotion classification
+```bash
+python main.ipynb
+```
+3. **Output:** The script will print the first few rows of the dataset to the console, showing the text samples and their associated emotion labels.
 
+## Transaction Type Distribution Visualization
 
-# Exploring transaction type
+To understand the distribution of different transaction types within the dataset, a pie chart was created using Plotly Express. This chart provides a clear visual representation of the proportion of each transaction type, such as 'fraudulent' and 'legitimate,' in the dataset.
 
-print(data.type.value_counts())
-CASH_OUT    2237500
-PAYMENT     2151495
-CASH_IN     1399284
-TRANSFER     532909
-DEBIT         41432
-Name: type, dtype: int64
+The steps involved include:
+- Counting the occurrences of each transaction type.
+- Extracting the transaction types and their respective counts.
+- Creating a donut-style pie chart to visualize the distribution, with a hole in the center to emphasize the relative sizes of each slice.
 
-type = data["type"].value_counts()
+The resulting chart helps in quickly identifying which transaction type is more prevalent, offering valuable insights into the dataset's composition.
 
+```python
+type = data['type'].value_counts()
 transactions = type.index
-
 quantity = type.values
 
-​
-
-import plotly.express as px
-
-figure = px.pie(data, 
-
-             values=quantity, 
-
-             names=transactions,hole = 0.5, 
-
-             title="Distribution of Transaction Type")
-
+import plotly.express as px # type: ignore
+figure = px.pie(data, values = quantity, names = transactions, hole = 0.5, title = "Distribution of Transaction Type")
 figure.show()
-Online Payments Fraud Detection
-Now let’s have a look at the correlation between the features of the data with the isFraud column:
+```
+<br />
 
 
-# Checking correlation
+## Model Training
+The model training is performed within the `main.ipynb` script, which processes the text data and trains a Sequential model using sklearn. You can modify the model architecture, training parameters, or the data processing steps within this script.
 
-correlation = data.corr()
-
-print(correlation["isFraud"].sort_values(ascending=False))
-isFraud           1.000000
-amount            0.076688
-isFlaggedFraud    0.044109
-step              0.031578
-oldbalanceOrg     0.010154
-newbalanceDest    0.000535
-oldbalanceDest   -0.005885
-newbalanceOrig   -0.008148
-Name: isFraud, dtype: float64
-Now let’s transform the categorical features into numerical. Here I will also transform the values of the isFraud column into No Fraud and Fraud labels to have a better understanding of the output:
-
-
-data["type"] = data["type"].map({"CASH_OUT": 1, "PAYMENT": 2, 
-
-                                 "CASH_IN": 3, "TRANSFER": 4,
-
-                                 "DEBIT": 5})
-
-data["isFraud"] = data["isFraud"].map({0: "No Fraud", 1: "Fraud"})
-
-print(data.head())
-   step  type    amount     nameOrig  oldbalanceOrg  newbalanceOrig  \
-0     1     2   9839.64  C1231006815       170136.0       160296.36   
-1     1     2   1864.28  C1666544295        21249.0        19384.72   
-2     1     4    181.00  C1305486145          181.0            0.00   
-3     1     1    181.00   C840083671          181.0            0.00   
-4     1     2  11668.14  C2048537720        41554.0        29885.86   
-
-      nameDest  oldbalanceDest  newbalanceDest   isFraud  isFlaggedFraud  
-0  M1979787155             0.0             0.0  No Fraud               0  
-1  M2044282225             0.0             0.0  No Fraud               0  
-2   C553264065             0.0             0.0     Fraud               0  
-3    C38997010         21182.0             0.0     Fraud               0  
-4  M1230701703             0.0             0.0  No Fraud               0 
-Online Payments Fraud Detection Model
-Now let’s train a classification model to classify fraud and non-fraud transactions. Before training the model, I will split the data into training and test sets:
-
-
-
-# splitting the data
-
-from sklearn.model_selection import train_test_split
-
-x = np.array(data[["type", "amount", "oldbalanceOrg", "newbalanceOrig"]])
-
-y = np.array(data[["isFraud"]])
-Now let’s train the online payments fraud detection model:
-
-
-# training a machine learning model
-
-from sklearn.tree import DecisionTreeClassifier
-
-xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.10, random_state=42)
-
+```python
+# Training the machine learning model
+from sklearn.tree import DecisionTreeClassifier # type: ignore
+xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size = 0.20, random_state = 42)
 model = DecisionTreeClassifier()
-
 model.fit(xtrain, ytrain)
+model.score(xtest, ytest)
+```
 
-print(model.score(xtest, ytest))
-0.9997391011878755
-Now let’s classify whether a transaction is a fraud or not by feeding about a transaction into the model:
+## Prediction
+After training the model, you can use it to predict emotions from new text inputs. Implement the prediction logic in a separate script or extend `main.ipynb` to include a prediction function.
 
-
-# prediction
-
-#features = [type, amount, oldbalanceOrg, newbalanceOrig]
-
+```python
+# Prediction
+# features = [type, amount, oldbalanceOrg, newbalanceOrig]
 features = np.array([[4, 9000.60, 9000.60, 0.0]])
-
 print(model.predict(features))
-['Fraud']
-Summary
-So this is how we can detect online payments fraud with machine learning using Python. Detecting online payment frauds is one of the applications of data science in finance. I hope you liked this article on online payments fraud detection with machine learning using Python. Feel free to ask valuable questions in the comments section below.
+```
+
+## File Structure
+Here is an overview of the project directory structure:
+
+```lua
+Online_Payment_Fraud_Detection/
+├── Images
+│   └── visualise.png
+│
+├── main.ipynb                # Jupyter notebooks (Source code)
+├── onlinefraud.csv           # Kaggle Dataset
+├── .gitattributes            # For handle the large files in gihub
+├── .gitignore                # Ignore the unwanted file like .venv
+├── requirements.txt          # List of dependencies
+├── CODE_OF_CONDUCT.md        # Contributing guidelines
+├── README.md                 # Project documentation
+└── LICENSE                   # License file
+```
+
+## Contributing
+Contributions are welcome! If you'd like to contribute to this project, please follow these steps:
+
+- Fork the repository & Star the repository
+- Create a new branch (git checkout -b feature)
+- Make your changes
+- Commit your changes (git commit -am 'Add new feature')
+- Push to the branch (git push origin feature)
+- Create a new Pull Request
+
+
+## Acknowledgements
+1. [Pandas](https://pandas.pydata.org/)
+2. [Sklearn](https://scikit-learn.org/stable/)
+3. [Kaggle](https://www.kaggle.com/datasets)
+4. [NumPy](https://numpy.org/)
+5. [Plotly](https://plotly.com/)
+
+
+
+**Happy Coding!** <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Fire.png" alt="Fire" width="30" align=center /><img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Star.png" alt="Star" width="30" align=center />
+
+
+
+
+
+
+
+
+
+
+
+
+
 
