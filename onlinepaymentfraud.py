@@ -31,4 +31,3 @@ model.fit(xtrain, ytrain)
 print(model.score(xtest, ytest))
 features = np.array([[4, 9000.60, 9000.60, 0.0]])
 print(model.predict(features))
-['Fraud']
